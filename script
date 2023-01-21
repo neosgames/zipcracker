@@ -1,0 +1,20 @@
+import zipfile
+from tqdm import tqdm
+
+wordlist = str(input('Input your wordlist name (ex. wordlist.txt): '))
+zip_file = str(input('Input your zip file name (ex. secret.zip): '))
+
+zip_file = zipfile.ZipFile(zip_file)
+numwords = len(list(open(wordlist, 'rb')))
+print('Passwords to test: ' + str(numwords))
+
+with open(wordlist, 'rb') as wordlist:
+    for word in tqdm(wordlist, total=numwords, unit='word'):
+        try:
+            zip_file.extractall(pwd=word.strip())
+        except:
+            continue
+        else:
+            print('[SUCCSESS] Password found: ' + word.decode().strip())
+            exit()
+print('[ERROR] No password matched from current wordlist, try another!')
